@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import kotlin.random.Random
 
-internal class PaymentScreenKtTest {
+internal class PaymentScreenInitTest {
 
     private lateinit var viewModel: PaymentScreenViewModel
 
@@ -83,7 +83,7 @@ internal class PaymentScreenKtTest {
 
     // Quick Action Text
     @Test
-    fun paymentScreen_init_should_see_quick_actions_text() {
+    fun init_should_see_quick_actions_text() {
         // arrange
         composeTestRule.setContent {
             PaymentScreen(viewModel)
