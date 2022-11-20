@@ -16,14 +16,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.kkunan.uitesting.grab.payment.PaymentScreenViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kkunan.uitesting.grab.payment.PaymentRouter
+import com.kkunan.uitesting.grab.payment.PaymentRouterImpl
 
 @Composable
-fun PaymentScreen(viewModel: PaymentScreenViewModel = viewModel()) {
+fun PaymentScreen(
+    viewModel: PaymentScreenViewModel = viewModel(),
+    router: PaymentRouter = PaymentRouterImpl()
+) {
     // Payment Text
     Row {
         Text(text = "Payment")
         // Setting button
-        IconButton(onClick = { /*TODO*/ }, Modifier.testTag("settingButton")) {
+        IconButton(onClick = { router.routeToSetting() }, Modifier.testTag("settingButton")) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_settings_24),
                 contentDescription = "Setting Button"
@@ -34,10 +39,10 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = viewModel()) {
     // Payment channels horizontal listview
     val channels = viewModel.channels.collectAsState(initial = emptyList())
     LazyRow(Modifier.testTag("paymentChannels")) {
-        items(channels.value) {
-            Card(modifier = Modifier.clickable {  }) {
-                Text(channels.value.first().channelName)
-                Text(channels.value.first().channelBalanceStr)
+        items(channels.value) { channel ->
+            Card(modifier = Modifier.clickable { router.routeToPayment(channel) }) {
+                Text(channel.channelName)
+                Text(channel.channelBalanceStr)
                 Text(stringResource(R.string.sgd_currency))
             }
         }
@@ -50,7 +55,7 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = viewModel()) {
     val actions = viewModel.quickActions.collectAsState(initial = emptyList())
     LazyRow(Modifier.testTag("quickActions")) {
         items(actions.value) { action ->
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { router.routeToQuickAction(action) }) {
                 Text(action.name)
             }
         }
@@ -62,7 +67,7 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = viewModel()) {
     val services = viewModel.availableServices.collectAsState(initial = emptyList())
     LazyRow(Modifier.testTag("availableServices")) {
         items(services.value) { service ->
-            Card(modifier = Modifier.clickable {  }) {
+            Card(modifier = Modifier.clickable { router.routeToService(service) }) {
                 Text(service.description)
             }
         }

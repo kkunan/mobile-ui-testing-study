@@ -16,7 +16,6 @@ internal class PaymentScreenInitTest {
 
     private lateinit var viewModel: PaymentScreenViewModel
 
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -55,7 +54,7 @@ internal class PaymentScreenInitTest {
     @Test
     fun init_should_display_payment_channels_with_the_channel_info_text() {
         // arrange
-        val channel = PaymentChannelUiState(
+        val channel = PaymentChannel(
             channelName = getRandomString(10),
             channelBalanceStr = (Random.nextInt(50) + Random.nextDouble()).toString()
         )

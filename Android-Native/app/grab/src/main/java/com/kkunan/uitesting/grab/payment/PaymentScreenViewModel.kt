@@ -8,16 +8,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * This is for the sake of example, won't implement the real one
  */
 class PaymentScreenViewModel(
-    initChannels: List<PaymentChannelUiState> = emptyList(),
+    initChannels: List<PaymentChannel> = emptyList(),
     initActions: List<QuickAction> = emptyList(),
     initServices: List<AvailableService> = emptyList(),
 ) : ViewModel() {
-    val channels: Flow<List<PaymentChannelUiState>> = MutableStateFlow(initChannels)
+    val channels: Flow<List<PaymentChannel>> = MutableStateFlow(initChannels)
     val quickActions: Flow<List<QuickAction>> = MutableStateFlow(initActions)
     val availableServices: Flow<List<AvailableService>> = MutableStateFlow(initServices)
 }
 
-data class PaymentChannelUiState(
+data class PaymentChannel(
     val channelName: String,
     val channelBalanceStr: String
 )
