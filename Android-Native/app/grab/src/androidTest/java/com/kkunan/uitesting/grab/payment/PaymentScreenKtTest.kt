@@ -1,13 +1,16 @@
-package com.kkunan.uitesting.grab
+package com.kkunan.uitesting.grab.payment
 
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import com.kkunan.uitesting.grab.payment.PaymentScreenViewModel
+import androidx.test.platform.app.InstrumentationRegistry
+import com.kkunan.uitesting.grab.PaymentScreen
+import com.kkunan.uitesting.grab.R
+import com.kkunan.uitesting.grab.utils.getRandomString
 import io.mockk.mockk
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.random.Random
 
 internal class PaymentScreenKtTest {
 
@@ -19,15 +22,13 @@ internal class PaymentScreenKtTest {
 
     @Before
     fun setUp() {
-        viewModel = mockk()
+        viewModel = mockk(relaxed = true)
     }
 
     // Payment Text
     @Test
-    fun paymentScreen_init_should_display_payment_text_title(){
+    fun init_should_display_payment_text_title() {
         // arrange
-
-        // act
         composeTestRule.setContent {
             PaymentScreen(viewModel)
         }
@@ -35,12 +36,128 @@ internal class PaymentScreenKtTest {
         // assert
         composeTestRule.onNodeWithText("Payment").assertIsDisplayed()
     }
+
     // Setting button
+    @Test
+    fun init_should_display_setting_button_with_correct_setup() {
+        // arrange
+        composeTestRule.setContent {
+            PaymentScreen(viewModel)
+        }
+
+        // assert
+        val setting = composeTestRule.onNodeWithTag("settingButton")
+        setting.assertIsDisplayed()
+        setting.assertHasClickAction()
+    }
+
     // Payment channels horizontal listview
+    @Test
+    fun init_should_display_payment_channels_with_the_channel_info_text() {
+        // arrange
+        val channel = PaymentChannelUiState(
+            channelName = getRandomString(10),
+            channelBalanceStr = (Random.nextInt(50) + Random.nextDouble()).toString()
+        )
+        viewModel = PaymentScreenViewModel(initChannels = listOf(channel))
+        composeTestRule.setContent {
+            PaymentScreen(viewModel)
+        }
+
+        // assert
+        val horizontalListView = composeTestRule.onNodeWithTag("paymentChannels")
+        horizontalListView.assertIsDisplayed()
+        val context = InstrumentationRegistry.getInstrumentation().context
+        horizontalListView.assert(
+            hasAnyDescendant(hasText(channel.channelName))
+                    and hasAnyDescendant(
+                hasText(channel.channelBalanceStr)
+            )
+        )
+        // for some reasons if put another and up there it fails
+        horizontalListView.assert(
+            hasAnyDescendant(hasText(context.getString(R.string.sgd_currency)))
+        )
+        horizontalListView.assert(hasScrollAction())
+    }
 
     // Quick Action Text
+    @Test
+    fun paymentScreen_init_should_see_quick_actions_text() {
+        // arrange
+        composeTestRule.setContent {
+            PaymentScreen(viewModel)
+        }
+
+        // assert
+        composeTestRule.onNodeWithText("Quick Actions").assertIsDisplayed()
+    }
+
     // Quick Action horizontal listview
+    @Test
+    fun init_should_display_quick_action_items() {
+        // arrange
+        val actions = listOf(
+            QuickAction(R.drawable.ic_baseline_attach_money_24, name = "Top Up"),
+            QuickAction(R.drawable.ic_baseline_qr_code_scanner_24, name = "Scan to Pay")
+        )
+        viewModel = PaymentScreenViewModel(
+            initActions = actions
+        )
+        composeTestRule.setContent {
+            PaymentScreen(viewModel)
+        }
+
+        // assert
+        val quickActions = composeTestRule.onNodeWithTag("quickActions")
+        quickActions.printToLog("quickActions")
+
+        quickActions.assertIsDisplayed()
+        quickActions.assert(hasScrollAction())
+        actions.forEach { action ->
+            quickActions.assert(
+                hasAnyDescendant(
+                    hasText(action.name)
+                            and hasClickAction()
+                )
+            )
+        }
+
+    }
 
     // Do more with your money text
+    @Test
+    fun init_should_display_do_more_with_your_money_text() {
+        // arrange
+        composeTestRule.setContent {
+            PaymentScreen(viewModel)
+        }
+
+        // assert
+        composeTestRule.onNodeWithText("Do more with your money").assertIsDisplayed()
+    }
+
     // Other service horizontal listview
+    @Test
+    fun init_should_display_services_description() {
+        // arrange
+        val services = listOf(
+            AvailableService(
+                imageUrl = "",
+                description = getRandomString(10)
+            )
+        )
+        viewModel = PaymentScreenViewModel(initServices = services)
+
+        composeTestRule.setContent {
+            PaymentScreen(viewModel)
+        }
+
+        // assert
+        val availableServices = composeTestRule.onNodeWithTag("availableServices")
+        availableServices.assertIsDisplayed()
+        services.forEach { service ->
+            availableServices.assert(hasAnyDescendant(hasText(service.description) and hasClickAction()))
+        }
+    }
 }
