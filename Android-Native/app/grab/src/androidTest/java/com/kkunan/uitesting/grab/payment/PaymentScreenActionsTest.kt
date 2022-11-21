@@ -51,10 +51,12 @@ internal class PaymentScreenActionsTest {
         val channels = listOf(
             PaymentChannel(
                 channelName = getRandomString(10),
+                channelDescription = getRandomString(30),
                 channelBalanceStr = (Random.nextInt(50) + Random.nextDouble()).toString()
             ),
             PaymentChannel(
                 channelName = getRandomString(10),
+                channelDescription = getRandomString(30),
                 channelBalanceStr = (Random.nextInt(50) + Random.nextDouble()).toString()
             ),
         )

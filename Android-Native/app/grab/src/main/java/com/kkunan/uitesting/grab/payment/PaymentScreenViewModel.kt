@@ -19,6 +19,7 @@ class PaymentScreenViewModel(
 
 data class PaymentChannel(
     val channelName: String,
+    val channelDescription: String,
     val channelBalanceStr: String
 )
 

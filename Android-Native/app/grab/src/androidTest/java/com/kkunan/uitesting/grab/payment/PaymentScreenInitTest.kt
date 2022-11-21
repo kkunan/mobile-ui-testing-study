@@ -56,6 +56,7 @@ internal class PaymentScreenInitTest {
         // arrange
         val channel = PaymentChannel(
             channelName = getRandomString(10),
+            channelDescription = getRandomString(30),
             channelBalanceStr = (Random.nextInt(50) + Random.nextDouble()).toString()
         )
         viewModel = PaymentScreenViewModel(initChannels = listOf(channel))
@@ -76,6 +77,9 @@ internal class PaymentScreenInitTest {
         // for some reasons if put another and up there it fails
         horizontalListView.assert(
             hasAnyDescendant(hasText(context.getString(R.string.sgd_currency)))
+        )
+        horizontalListView.assert(
+            hasAnyDescendant(hasText(channel.channelDescription))
         )
         horizontalListView.assert(hasScrollAction())
     }
