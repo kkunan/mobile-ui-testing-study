@@ -24,7 +24,7 @@ internal class PaymentScreenInitTest {
         viewModel = mockk(relaxed = true)
     }
 
-    // Payment Text
+    //region Payment Text
     @Test
     fun init_should_display_payment_text_title() {
         // arrange
@@ -36,7 +36,9 @@ internal class PaymentScreenInitTest {
         composeTestRule.onNodeWithText("Payment").assertIsDisplayed()
     }
 
-    // Setting button
+    // endregion
+
+    // region Setting button
     @Test
     fun init_should_display_setting_button_with_correct_setup() {
         // arrange
@@ -50,7 +52,9 @@ internal class PaymentScreenInitTest {
         setting.assertHasClickAction()
     }
 
-    // Payment channels horizontal listview
+    // endregion
+
+    // region Payment channels horizontal listview
     @Test
     fun init_should_display_payment_channels_with_the_channel_info_text() {
         // arrange
@@ -83,8 +87,9 @@ internal class PaymentScreenInitTest {
         )
         horizontalListView.assert(hasScrollAction())
     }
+    // endregion
 
-    // Quick Action Text
+    // region Quick Action
     @Test
     fun init_should_see_quick_actions_text() {
         // arrange
@@ -95,6 +100,7 @@ internal class PaymentScreenInitTest {
         // assert
         composeTestRule.onNodeWithText("Quick Actions").assertIsDisplayed()
     }
+
 
     // Quick Action horizontal listview
     @Test
@@ -125,10 +131,10 @@ internal class PaymentScreenInitTest {
                 )
             )
         }
-
     }
+    // endregion
 
-    // Do more with your money text
+    // region Other service
     @Test
     fun init_should_display_do_more_with_your_money_text() {
         // arrange
@@ -163,4 +169,5 @@ internal class PaymentScreenInitTest {
             availableServices.assert(hasAnyDescendant(hasText(service.description) and hasClickAction()))
         }
     }
+    // endregion
 }

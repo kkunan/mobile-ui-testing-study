@@ -58,33 +58,41 @@ fun PaymentScreen(
             })
 
 
-            // Quick Action Text
-            Text("Quick Actions")
-            // Quick Action horizontal listview
-            val actions = viewModel.quickActions.collectAsState(initial = emptyList())
-            LazyRow(Modifier.testTag("quickActions")) {
-                items(actions.value) { action ->
-                    IconButton(onClick = { router.routeToQuickAction(action) }) {
-                        Text(action.name)
+            // Quick Action
+            Slot(title = "Quick Actions", body = {
+                val actions = viewModel.quickActions.collectAsState(initial = emptyList())
+                LazyRow(Modifier.testTag("quickActions")) {
+                    items(actions.value) { action ->
+                        IconButton(onClick = { router.routeToQuickAction(action) }) {
+                            Text(action.name)
+                        }
                     }
                 }
-            }
+            })
 
-            // Do more with your money text
-            Text("Do more with your money")
             // Other service horizontal listview
-            val services = viewModel.availableServices.collectAsState(initial = emptyList())
-            LazyRow(Modifier.testTag("availableServices")) {
-                items(services.value) { service ->
-                    Card(modifier = Modifier.clickable { router.routeToService(service) }) {
-                        Text(service.description)
+            Slot(title = "Do more with your money", body = {
+                val services = viewModel.availableServices.collectAsState(initial = emptyList())
+                LazyRow(Modifier.testTag("availableServices")) {
+                    items(services.value) { service ->
+                        Card(modifier = Modifier.clickable { router.routeToService(service) }) {
+                            Text(service.description)
+                        }
                     }
                 }
-            }
+            })
 
         }
     }
     // Bottom navigation bar with five tabs *** test where it belongs
+}
+
+@Composable
+private fun Slot(title: String, body: @Composable () -> Unit, modifier: Modifier = Modifier){
+    Column(modifier = modifier) {
+        Text(title)
+        body()
+    }
 }
 
 @Composable
